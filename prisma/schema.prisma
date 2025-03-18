@@ -1,0 +1,55 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String      @map("_id") @id @default(auto()) @db.ObjectId
+  firstName     String
+  lastName      String?
+  email         String                  @unique
+  password      String
+  accountType   AccountType
+  language      String?                 @default("fr")
+  phoneNumber   String?
+  dateOfBirth   DateTime?
+  address       String?
+  refreshToken  String?
+  emailVerified Boolean?                @default(false)
+  createdAt     DateTime                @default(now())
+  updatedAt     DateTime                @updatedAt
+
+  @@map("users")
+}
+
+enum AccountType {
+  ACTIVE
+  INACTIVE
+  BLOCKED
+}
+
+model Workshop {
+  id          String         @map("_id") @id @default(auto()) @db.ObjectId
+  title       String
+  description String
+  startDate   DateTime
+  endDate     DateTime
+  maxSeats    Int
+  location    String?
+  status      WorkshopStatus             @default(DRAFT)
+  createdAt   DateTime                   @default(now())
+  updatedAt   DateTime                   @updatedAt
+
+  @@map("workshops")
+}
+
+enum WorkshopStatus {
+  DRAFT
+  PUBLISHED
+  CANCELLED
+  COMPLETED
+}
